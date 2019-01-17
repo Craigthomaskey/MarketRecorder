@@ -43,7 +43,7 @@
             // CloseBttn
             // 
             this.CloseBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBttn.Location = new System.Drawing.Point(375, 10);
+            this.CloseBttn.Location = new System.Drawing.Point(390, 5);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
             this.CloseBttn.Size = new System.Drawing.Size(74, 25);
@@ -55,7 +55,7 @@
             // SettingsBttn
             // 
             this.SettingsBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsBttn.Location = new System.Drawing.Point(294, 10);
+            this.SettingsBttn.Location = new System.Drawing.Point(309, 5);
             this.SettingsBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.SettingsBttn.Name = "SettingsBttn";
             this.SettingsBttn.Size = new System.Drawing.Size(74, 25);
@@ -67,7 +67,7 @@
             // MoveBttn
             // 
             this.MoveBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MoveBttn.Location = new System.Drawing.Point(213, 10);
+            this.MoveBttn.Location = new System.Drawing.Point(228, 5);
             this.MoveBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MoveBttn.Name = "MoveBttn";
             this.MoveBttn.Size = new System.Drawing.Size(74, 25);
@@ -81,7 +81,7 @@
             // SizeBttn
             // 
             this.SizeBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SizeBttn.Location = new System.Drawing.Point(373, 443);
+            this.SizeBttn.Location = new System.Drawing.Point(390, 448);
             this.SizeBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.SizeBttn.Name = "SizeBttn";
             this.SizeBttn.Size = new System.Drawing.Size(74, 25);
@@ -100,10 +100,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MainContainer.AutoScroll = true;
             this.MainContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MainContainer.Location = new System.Drawing.Point(3, 2);
+            this.MainContainer.Location = new System.Drawing.Point(3, 36);
             this.MainContainer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MainContainer.Name = "MainContainer";
-            this.MainContainer.Size = new System.Drawing.Size(454, 476);
+            this.MainContainer.Size = new System.Drawing.Size(464, 406);
             this.MainContainer.TabIndex = 1;
             this.MainContainer.DragDrop += new System.Windows.Forms.DragEventHandler(this.ContDragDrop);
             this.MainContainer.DragOver += new System.Windows.Forms.DragEventHandler(this.ContDragOver);
@@ -136,7 +136,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(460, 480);
+            this.ClientSize = new System.Drawing.Size(470, 480);
             this.Controls.Add(this.SizeBttn);
             this.Controls.Add(this.MoveBttn);
             this.Controls.Add(this.SettingsBttn);
@@ -145,7 +145,8 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.MinimumSize = new System.Drawing.Size(450, 480);
+            this.MaximumSize = new System.Drawing.Size(470, 2000);
+            this.MinimumSize = new System.Drawing.Size(470, 480);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";

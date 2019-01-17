@@ -53,10 +53,11 @@
             // 
             this.IconBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.IconBox.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.IconBox.BackColor = System.Drawing.SystemColors.Control;
             this.IconBox.Location = new System.Drawing.Point(6, 4);
             this.IconBox.Name = "IconBox";
             this.IconBox.Size = new System.Drawing.Size(33, 31);
+            this.IconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.IconBox.TabIndex = 1;
             this.IconBox.TabStop = false;
             // 
@@ -76,7 +77,7 @@
             // DurrationTimer
             // 
             this.DurrationTimer.Enabled = true;
-            this.DurrationTimer.Interval = 5000;
+            this.DurrationTimer.Interval = 10000;
             this.DurrationTimer.Tick += new System.EventHandler(this.DurrationTimer_Tick);
             // 
             // Notification
