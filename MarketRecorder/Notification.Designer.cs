@@ -42,9 +42,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MainLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MainLabel.Location = new System.Drawing.Point(45, 4);
+            this.MainLabel.Location = new System.Drawing.Point(44, 5);
+            this.MainLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.MainLabel.Name = "MainLabel";
-            this.MainLabel.Size = new System.Drawing.Size(347, 31);
+            this.MainLabel.Size = new System.Drawing.Size(346, 30);
             this.MainLabel.TabIndex = 0;
             this.MainLabel.Text = "This is a notification in case you need to know something!";
             this.MainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -54,9 +55,10 @@
             this.IconBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.IconBox.BackColor = System.Drawing.SystemColors.Control;
-            this.IconBox.Location = new System.Drawing.Point(6, 4);
+            this.IconBox.Location = new System.Drawing.Point(6, 5);
+            this.IconBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.IconBox.Name = "IconBox";
-            this.IconBox.Size = new System.Drawing.Size(33, 31);
+            this.IconBox.Size = new System.Drawing.Size(32, 31);
             this.IconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.IconBox.TabIndex = 1;
             this.IconBox.TabStop = false;
@@ -65,7 +67,7 @@
             // 
             this.CloseBttn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBttn.Location = new System.Drawing.Point(397, 4);
+            this.CloseBttn.Location = new System.Drawing.Point(397, 5);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
             this.CloseBttn.Size = new System.Drawing.Size(50, 31);
@@ -82,14 +84,17 @@
             // 
             // Notification
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(450, 40);
             this.Controls.Add(this.CloseBttn);
             this.Controls.Add(this.IconBox);
             this.Controls.Add(this.MainLabel);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "Notification";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Notification";
             ((System.ComponentModel.ISupportInitialize)(this.IconBox)).EndInit();
             this.ResumeLayout(false);

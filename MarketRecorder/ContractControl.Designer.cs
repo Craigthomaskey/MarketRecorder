@@ -71,7 +71,7 @@
             this.MainLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MainLabel.Location = new System.Drawing.Point(3, 3);
             this.MainLabel.Name = "MainLabel";
-            this.MainLabel.Size = new System.Drawing.Size(109, 34);
+            this.MainLabel.Size = new System.Drawing.Size(109, 33);
             this.MainLabel.TabIndex = 4;
             this.MainLabel.Text = "HE Feb19 x Apr19";
             this.MainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -83,7 +83,7 @@
             this.LastTradeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LastTradeLbl.Location = new System.Drawing.Point(116, 3);
             this.LastTradeLbl.Name = "LastTradeLbl";
-            this.LastTradeLbl.Size = new System.Drawing.Size(46, 34);
+            this.LastTradeLbl.Size = new System.Drawing.Size(46, 33);
             this.LastTradeLbl.TabIndex = 5;
             this.LastTradeLbl.Text = "N/A";
             this.LastTradeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -95,7 +95,7 @@
             this.TradeTypeLabl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TradeTypeLabl.Location = new System.Drawing.Point(216, 3);
             this.TradeTypeLabl.Name = "TradeTypeLabl";
-            this.TradeTypeLabl.Size = new System.Drawing.Size(46, 34);
+            this.TradeTypeLabl.Size = new System.Drawing.Size(46, 33);
             this.TradeTypeLabl.TabIndex = 5;
             this.TradeTypeLabl.Text = "N/A";
             this.TradeTypeLabl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -107,7 +107,7 @@
             this.AskVolumeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.AskVolumeLbl.Location = new System.Drawing.Point(266, 3);
             this.AskVolumeLbl.Name = "AskVolumeLbl";
-            this.AskVolumeLbl.Size = new System.Drawing.Size(46, 34);
+            this.AskVolumeLbl.Size = new System.Drawing.Size(46, 33);
             this.AskVolumeLbl.TabIndex = 5;
             this.AskVolumeLbl.Text = "N/A";
             this.AskVolumeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -119,7 +119,7 @@
             this.BidVolumeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.BidVolumeLbl.Location = new System.Drawing.Point(316, 3);
             this.BidVolumeLbl.Name = "BidVolumeLbl";
-            this.BidVolumeLbl.Size = new System.Drawing.Size(46, 34);
+            this.BidVolumeLbl.Size = new System.Drawing.Size(46, 33);
             this.BidVolumeLbl.TabIndex = 5;
             this.BidVolumeLbl.Text = "N/A";
             this.BidVolumeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -131,14 +131,14 @@
             this.LastPriceLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LastPriceLbl.Location = new System.Drawing.Point(167, 3);
             this.LastPriceLbl.Name = "LastPriceLbl";
-            this.LastPriceLbl.Size = new System.Drawing.Size(46, 34);
+            this.LastPriceLbl.Size = new System.Drawing.Size(46, 33);
             this.LastPriceLbl.TabIndex = 6;
             this.LastPriceLbl.Text = "N/A";
             this.LastPriceLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ContractControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.LastPriceLbl);
             this.Controls.Add(this.BidVolumeLbl);
@@ -148,6 +148,7 @@
             this.Controls.Add(this.MainLabel);
             this.Controls.Add(this.SettingsBttn);
             this.Controls.Add(this.CloseBttn);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ContractControl";
             this.Size = new System.Drawing.Size(450, 40);
             this.ResumeLayout(false);
