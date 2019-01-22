@@ -18,6 +18,7 @@ namespace MarketRecorder
         public void Init(Form1 f)
         {
             MainForm = f;
+            Owner = MainForm;
         }
         private void CloseBttn_Click(object sender, EventArgs e)        {            Hide(); MainForm.SettingFormClosed();        }
 

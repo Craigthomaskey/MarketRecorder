@@ -37,6 +37,7 @@ namespace MarketRecorder
             }
         }
 
+        string OutputName = "";
         public void SetUp()
         {
             if (StartRecordWindowTime == DateTime.MinValue || EndRecordWindowTime == DateTime.MinValue)
@@ -44,8 +45,10 @@ namespace MarketRecorder
                 if (Instrument.Product.Name == "HE" || Instrument.Product.Name == "LE" || Instrument.Product.Name == "GF") { StartRecordWindowTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 59, 00); EndRecordWindowTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 13, 00, 30); }
                 else { StartRecordWindowTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 13, 13, 00); EndRecordWindowTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 13, 15, 00); }
             }
+            if (Instrument.Product.Type == ProductType.Spread) OutputName = Instrument.Product.Name + " " + Instrument.GetFormattedName(InstrumentNameFormat.Expiry).Substring(Instrument.GetFormattedName(InstrumentNameFormat.Expiry).Length - 14, 5) + " x " + Instrument.GetFormattedName(InstrumentNameFormat.Expiry).Substring(Instrument.GetFormattedName(InstrumentNameFormat.Expiry).Length - 5);
+            else OutputName = Instrument.Product.Name + " " + Instrument.GetFormattedName(InstrumentNameFormat.Expiry);
 
-            ContControl = MainForm.BuildControl(Instrument.GetFormattedName(InstrumentNameFormat.Normal), this);            if (ContControl == null) TTAPIF.CallBackCancel(this);
+            ContControl = MainForm.BuildControl(Instrument.GetFormattedName(InstrumentNameFormat.Normal), this, OutputName);            if (ContControl == null) TTAPIF.CallBackCancel(this);
         }
         public void DeathCall()        {            TTAPIF.CallBackCancel(this);        }
 

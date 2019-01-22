@@ -14,7 +14,7 @@ namespace MarketRecorder
     {
         public ContractControl() { InitializeComponent(); }
         Contract LinkedCont; Form1 MainForm;
-        public void Init(string name, Contract cont, Form1 f) { MainLabel.Text = name; LinkedCont = cont; MainForm = f; }
+        public void Init(string name, Contract cont, Form1 f, string dispName) { MainLabel.Text = dispName; Name = name; LinkedCont = cont; MainForm = f; }
         public void PassData(string[] data)
         {
             LastTradeLbl.Text = data[2];
@@ -24,7 +24,7 @@ namespace MarketRecorder
             BidVolumeLbl.Text = data[6];
         }
 
-        private void CloseBttn_Click(object sender, EventArgs e) { LinkedCont.DeathCall(); MainForm.ControlDeathCall(MainLabel.Text, this); }
+        private void CloseBttn_Click(object sender, EventArgs e) { LinkedCont.DeathCall(); MainForm.ControlDeathCall(Name, this); }
         private void SettingsBttn_Click(object sender, EventArgs e)
         {
             //open settings panel and adjust the controls to effect the linked contract

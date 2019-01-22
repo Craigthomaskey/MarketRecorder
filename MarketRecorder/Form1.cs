@@ -28,7 +28,7 @@ namespace MarketRecorder
         private void ContDragDrop(object sender, DragEventArgs e) { if (e.Data.HasInstrumentKeys()) foreach (InstrumentKey ik in e.Data.GetInstrumentKeys()) TTAPIF.CallInsturmentSubscription(ik); }
 
         private void SettingsBttn_Click(object sender, EventArgs e) { SettingMenu.Show(PointToScreen(SettingsBttn.Location)); }
-        private void CloseBttn_Click(object sender, EventArgs e) { TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
+        private void CloseBttn_Click(object sender, EventArgs e) { if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveDataCall(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
 
         private void saveContractsToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveContracts(false); }
 
@@ -38,35 +38,35 @@ namespace MarketRecorder
         {
             Location = Properties.Settings.Default.Location; Size = Properties.Settings.Default.Size;
             MainContainer.HorizontalScroll.Enabled = false;
-            //load config files 
-        }
+            notificationsToolStripMenuItem.Checked = Properties.Settings.Default.Popups;
+            sIMToolStripMenuItem.Checked = Properties.Settings.Default.SIM;
+            writeOnCloseToolStripMenuItem.Checked = Properties.Settings.Default.WriteOnClose;
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            // need to add sim setting
-            TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, true);
-            SetForm = new SettingForm(); SetForm.Init(this);
-        }
+            if (Properties.Settings.Default.WriteSpeed == 15000) secondsToolStripMenuItem1.PerformClick();
+            else if (Properties.Settings.Default.WriteSpeed == 30000) secondsToolStripMenuItem.PerformClick();
+            else if (Properties.Settings.Default.WriteSpeed == 60000) minuteToolStripMenuItem.PerformClick();
+            else if (Properties.Settings.Default.WriteSpeed == 120000) minutesToolStripMenuItem.PerformClick();
+            else if (Properties.Settings.Default.WriteSpeed == 300000) minutesToolStripMenuItem1.PerformClick();
+            else hourToolStripMenuItem.PerformClick();
 
-        public void XtraderConnected(UniversalLoginTTAPI uapi)
-        {
-            apiInstance = uapi;
-            BuildNotification("Xtrader connected.", Properties.Resources.ChickenBlack);
+            ((ToolStripDropDownMenu)dataUpdateSpeedToolStripMenuItem.DropDown).ShowImageMargin = false; dataUpdateSpeedToolStripMenuItem.DropDown.Closing += DropDown_Closing;
         }
+        private void DropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
+        private void SettingMenu_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
+
+        private void Form1_Shown(object sender, EventArgs e) { TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, Properties.Settings.Default.SIM); SetForm = new SettingForm(); SetForm.Init(this); }
+
+        public void XtraderConnected(UniversalLoginTTAPI uapi) { apiInstance = uapi; BuildNotification("Xtrader connected.", Properties.Resources.ConnectedNote); }
 
 
         public List<Notification> NoteList = new List<Notification>();
         public void BuildNotification(string text, Image img)
         {
-            // if (Properties.Settings.Default.Popups)
-            //{
-            if (img == null) img = Properties.Resources.ChickenBlack;
-            Notification N = new Notification();
-            N.Show();
-            N.Init(this, text, img, BackColor, Width);
-            NoteList.Add(N);
-            NotificationPlacement();
-            //}
+            if (Properties.Settings.Default.Popups)
+            {
+                if (img == null) img = Properties.Resources.ChickenBlack;
+                Notification N = new Notification(); N.Show(); N.Init(this, text, img, BackColor, Width); NoteList.Add(N); NotificationPlacement();
+            }
         }
         public void NotificationPlacement()
         {
@@ -76,18 +76,14 @@ namespace MarketRecorder
         }
 
         SortedDictionary<string, ContractControl> ContControlDict = new SortedDictionary<string, ContractControl>();
-        public ContractControl BuildControl(string name, Contract cont)
+        public ContractControl BuildControl(string name, Contract cont, string dispName)
         {
             if (!ContControlDict.ContainsKey(name))
             {
-                ContractControl CC = new ContractControl(); CC.Init(name, cont, this); ContControlDict.Add(name, CC); MainContainer.Controls.Add(CC);
-                foreach (var v in ContControlDict) MainContainer.Controls.SetChildIndex(v.Value, ContControlDict.Values.ToList().IndexOf(v.Value));
-                return CC;
+                ContractControl CC = new ContractControl(); CC.Init(name, cont, this, dispName); ContControlDict.Add(name, CC); MainContainer.Controls.Add(CC);
+                foreach (var v in ContControlDict) MainContainer.Controls.SetChildIndex(v.Value, ContControlDict.Values.ToList().IndexOf(v.Value)); return CC;
             }
-            else
-            {
-                return null;
-            }
+            else { return null; }
         }
         public void ControlDeathCall(string name, ContractControl cont) { MainContainer.Controls.Remove(cont); ContControlDict.Remove(name); }
 
@@ -96,20 +92,35 @@ namespace MarketRecorder
         {
             if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight(); HighlightedContCtrl = contCtrl;
             SetForm.Visible = true; SetForm.ConnectContract(name, cont); SetForm.RepositionThis(Height, Width, Location);
-
         }
         public void SettingFormClosed() { if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight(); }
 
+        private void writeDataToolStripMenuItem_Click(object sender, EventArgs e) { if (TTAPIF.SaveDataCall()) BuildNotification("Data Exported.", Properties.Resources.SaveNote); else BuildNotification("Export failed, file may be open in another location.", Properties.Resources.ChickenBlack); }
+        private void pauseRecordingToolStripMenuItem_Click(object sender, EventArgs e) { pauseRecordingToolStripMenuItem.Checked = TTAPIF.PauseRecording ^= true; }
+        private void notificationsToolStripMenuItem_Click(object sender, EventArgs e) { notificationsToolStripMenuItem.Checked = Properties.Settings.Default.Popups ^= true; }
+        private void sIMToolStripMenuItem_Click(object sender, EventArgs e) { sIMToolStripMenuItem.Checked = Properties.Settings.Default.SIM ^= true; }
+        private void writeOnCloseToolStripMenuItem_Click(object sender, EventArgs e) { writeOnCloseToolStripMenuItem.Checked = Properties.Settings.Default.WriteOnClose ^= true; }
 
+        private void secondsToolStripMenuItem1_Click(object sender, EventArgs e) { ChangeWriteSpeed(15000, secondsToolStripMenuItem1); }
+        private void secondsToolStripMenuItem_Click(object sender, EventArgs e) { ChangeWriteSpeed(30000, secondsToolStripMenuItem); }
+        private void minuteToolStripMenuItem_Click(object sender, EventArgs e) { ChangeWriteSpeed(60000, minuteToolStripMenuItem); }
+        private void minutesToolStripMenuItem_Click(object sender, EventArgs e) { ChangeWriteSpeed(120000, minutesToolStripMenuItem); }
+        private void minutesToolStripMenuItem1_Click(object sender, EventArgs e) { ChangeWriteSpeed(300000, minutesToolStripMenuItem1); }
+        private void hourToolStripMenuItem_Click(object sender, EventArgs e) { ChangeWriteSpeed(3600000, hourToolStripMenuItem); }
+        void ChangeWriteSpeed(int speed, ToolStripMenuItem SMI)
+        {
+            foreach (ToolStripMenuItem MI in dataUpdateSpeedToolStripMenuItem.DropDownItems) MI.Checked = false;
+            Properties.Settings.Default.WriteSpeed = speed;
+            SMI.Checked = true;
+        }
 
+        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
+            if (tsmi.Checked) tsmi.BackColor = SystemColors.ControlLight;
+            else tsmi.BackColor = SystemColors.Control;
+        }
 
-
-
-
-
-
-
-
-
+        
     }
 }

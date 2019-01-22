@@ -42,12 +42,17 @@
             // 
             this.CloseBttn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBttn.Location = new System.Drawing.Point(396, 3);
+            this.CloseBttn.BackgroundImage = global::MarketRecorder.Properties.Resources.DeleteCont;
+            this.CloseBttn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CloseBttn.FlatAppearance.BorderSize = 0;
+            this.CloseBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CloseBttn.ForeColor = System.Drawing.SystemColors.Control;
+            this.CloseBttn.Location = new System.Drawing.Point(416, 4);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
-            this.CloseBttn.Size = new System.Drawing.Size(50, 34);
+            this.CloseBttn.Size = new System.Drawing.Size(22, 33);
             this.CloseBttn.TabIndex = 3;
-            this.CloseBttn.Text = "Close";
+            this.CloseBttn.Text = " ";
             this.CloseBttn.UseVisualStyleBackColor = true;
             this.CloseBttn.Click += new System.EventHandler(this.CloseBttn_Click);
             // 
@@ -55,12 +60,17 @@
             // 
             this.SettingsBttn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsBttn.Location = new System.Drawing.Point(368, 3);
+            this.SettingsBttn.BackgroundImage = global::MarketRecorder.Properties.Resources.SettingsCont;
+            this.SettingsBttn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.SettingsBttn.FlatAppearance.BorderSize = 0;
+            this.SettingsBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsBttn.ForeColor = System.Drawing.SystemColors.Control;
+            this.SettingsBttn.Location = new System.Drawing.Point(387, 4);
             this.SettingsBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.SettingsBttn.Name = "SettingsBttn";
-            this.SettingsBttn.Size = new System.Drawing.Size(25, 34);
+            this.SettingsBttn.Size = new System.Drawing.Size(15, 33);
             this.SettingsBttn.TabIndex = 3;
-            this.SettingsBttn.Text = "S";
+            this.SettingsBttn.Text = " ";
             this.SettingsBttn.UseVisualStyleBackColor = true;
             this.SettingsBttn.Click += new System.EventHandler(this.SettingsBttn_Click);
             // 
@@ -81,7 +91,7 @@
             this.LastTradeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.LastTradeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LastTradeLbl.Location = new System.Drawing.Point(116, 3);
+            this.LastTradeLbl.Location = new System.Drawing.Point(118, 3);
             this.LastTradeLbl.Name = "LastTradeLbl";
             this.LastTradeLbl.Size = new System.Drawing.Size(46, 33);
             this.LastTradeLbl.TabIndex = 5;
@@ -93,7 +103,7 @@
             this.TradeTypeLabl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.TradeTypeLabl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TradeTypeLabl.Location = new System.Drawing.Point(216, 3);
+            this.TradeTypeLabl.Location = new System.Drawing.Point(222, 3);
             this.TradeTypeLabl.Name = "TradeTypeLabl";
             this.TradeTypeLabl.Size = new System.Drawing.Size(46, 33);
             this.TradeTypeLabl.TabIndex = 5;
@@ -105,7 +115,7 @@
             this.AskVolumeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.AskVolumeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.AskVolumeLbl.Location = new System.Drawing.Point(266, 3);
+            this.AskVolumeLbl.Location = new System.Drawing.Point(274, 3);
             this.AskVolumeLbl.Name = "AskVolumeLbl";
             this.AskVolumeLbl.Size = new System.Drawing.Size(46, 33);
             this.AskVolumeLbl.TabIndex = 5;
@@ -117,7 +127,7 @@
             this.BidVolumeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.BidVolumeLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.BidVolumeLbl.Location = new System.Drawing.Point(316, 3);
+            this.BidVolumeLbl.Location = new System.Drawing.Point(326, 3);
             this.BidVolumeLbl.Name = "BidVolumeLbl";
             this.BidVolumeLbl.Size = new System.Drawing.Size(46, 33);
             this.BidVolumeLbl.TabIndex = 5;
@@ -129,7 +139,7 @@
             this.LastPriceLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.LastPriceLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LastPriceLbl.Location = new System.Drawing.Point(167, 3);
+            this.LastPriceLbl.Location = new System.Drawing.Point(170, 3);
             this.LastPriceLbl.Name = "LastPriceLbl";
             this.LastPriceLbl.Size = new System.Drawing.Size(46, 33);
             this.LastPriceLbl.TabIndex = 6;
@@ -140,6 +150,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.LastPriceLbl);
             this.Controls.Add(this.BidVolumeLbl);
             this.Controls.Add(this.AskVolumeLbl);

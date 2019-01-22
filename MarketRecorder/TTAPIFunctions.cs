@@ -16,7 +16,7 @@ namespace MarketRecorder
         string SavePath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Logs\MaxData {0} " + DateTime.Today.ToString("yyyy-MM-dd") + ".csv";
         string ContConfigPath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-Contracts.txt";
         public List<Contract> ContList = new List<Contract>();  List<string[]> DataToSaveList = new List<string[]>(); List<string[]> WindowDataToSaveList = new List<string[]>();
-        List<string> HeadingsList = new List<string>() { "Time", "Quantity", "Price", "Direction", "Ask Vol", "Bid Vol", "Order Type", "Market/Firm", "Trader ID", "Order Type", "Fill Source" };
+        List<string> HeadingsList = new List<string>() { "Time", "Contract", "Quantity", "Price", "Direction", "Ask Vol", "Bid Vol", "Market/Firm", "Order Tag", "Trader ID", "Order Type", "Fill Source" };
 
         public void Init(Form1 f, bool sim)
         {
@@ -31,7 +31,7 @@ namespace MarketRecorder
         public void apiInstance_AuthenticationStatusUpdate(object sender, AuthenticationStatusUpdateEventArgs e)
         {
             MainForm.XtraderConnected(apiInstance);
-            MainForm.BuildNotification(LoadSavedContracts(), Properties.Resources.ChickenBlack);
+            MainForm.BuildNotification(LoadSavedContracts(), Properties.Resources.LoadNote);
             //start timer for saving data (?per minute?)
             SaveTImer = new Timer(60000); SaveTImer.Elapsed += SaveTImer_Elapsed; SaveTImer.Enabled = true;
         }
@@ -68,9 +68,11 @@ namespace MarketRecorder
             catch { return "Opps... Something went wrong while trying to load saved contracts. Some contracts might not have been loaded!"; }
         }
 
+        public bool PauseRecording = false;
+        public void IncomingData(string[] data) { if(!PauseRecording) DataToSaveList.Add(data); }
+        private void SaveTImer_Elapsed(object sender, ElapsedEventArgs e) { SaveDataCall(); SaveTImer.Interval = Properties.Settings.Default.WriteSpeed; }            
+        public bool SaveDataCall() { if (SaveData()) { DataToSaveList.Clear(); return true; } else return false; }
 
-        public void IncomingData(string[] data) { DataToSaveList.Add(data); }
-        private void SaveTImer_Elapsed(object sender, ElapsedEventArgs e) { if (SaveData()) DataToSaveList.Clear(); }
         public bool SaveData()
         {
             string saveFile = string.Format(SavePath, "Main");
@@ -78,26 +80,24 @@ namespace MarketRecorder
             if (!File.Exists(saveFile))
             {
                 string tempHeaders = "";
-                for (int i = 0; i < HeadingsList.Count; i++)                
-                    tempHeaders += HeadingsList[i] + ",";               
+                for (int i = 0; i < HeadingsList.Count; i++)
+                    tempHeaders += HeadingsList[i] + ",";
                 File.WriteAllText(saveFile, tempHeaders + Environment.NewLine);
             }
             if (DataToSaveList.Count > 0)
             {
                 try
                 {
-                    var csvString = new StringBuilder(); string tempLine = "";
-                    foreach (string[] items in DataToSaveList)
+                    string tempLine = "";
+                    for (int i = 0; i < DataToSaveList.Count; i++)
                     {
-                        if(DataToSaveList.IndexOf(items) !=0) csvString.AppendLine();
-                        for (int i = 0; i < items.Count(); i++)
-                            tempLine += items[i] + ",";
-                        csvString.AppendLine(tempLine);
+                        for (int d = 0; d < DataToSaveList[i].Count(); d++)
+                            tempLine += DataToSaveList[i][d] + ",";
+                        tempLine += Environment.NewLine;
                     }
-                        File.AppendAllText(saveFile, csvString.ToString());
-                    return true;
+                    File.AppendAllText(saveFile, tempLine); return true;
                 }
-                catch { return false; }
+                catch (Exception e) { return false; }
             }
             else return false;
         }
@@ -117,18 +117,16 @@ namespace MarketRecorder
             {
                 try
                 {
-                    var csvString = new StringBuilder(); string tempLine = "";
-                    foreach (string[] items in WindowDataToSaveList)
+                    string tempLine = "";
+                    for (int i = 0; i < WindowDataToSaveList.Count; i++)
                     {
-                        if (WindowDataToSaveList.IndexOf(items) != 0) csvString.AppendLine();
-                        for (int i = 0; i < items.Count(); i++)
-                            tempLine += items[i] + ",";
-                        csvString.AppendLine(tempLine);
+                        for (int d = 0; d < WindowDataToSaveList[i].Count(); d++)
+                            tempLine += WindowDataToSaveList[i][d] + ",";
+                        tempLine += Environment.NewLine;
                     }
-                    File.AppendAllText(saveFile, csvString.ToString());
-                    return true;
+                    File.AppendAllText(saveFile, tempLine); return true;
                 }
-                catch { return false; }
+                catch (Exception e) { return false; }
             }
             else return false;
         }
@@ -152,7 +150,7 @@ namespace MarketRecorder
             }
             File.WriteAllText(ContConfigPath, tempLine);
 
-            if (!closing) MainForm.BuildNotification("Contracts saved.", Properties.Resources.ChickenBlack);
+            if (!closing) MainForm.BuildNotification("Contracts saved.", Properties.Resources.SaveNote);
         }
 
 

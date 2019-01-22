@@ -46,5 +46,53 @@ namespace MarketRecorder.Properties {
                 this["Size"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Popups {
+            get {
+                return ((bool)(this["Popups"]));
+            }
+            set {
+                this["Popups"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SIM {
+            get {
+                return ((bool)(this["SIM"]));
+            }
+            set {
+                this["SIM"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60000")]
+        public int WriteSpeed {
+            get {
+                return ((int)(this["WriteSpeed"]));
+            }
+            set {
+                this["WriteSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WriteOnClose {
+            get {
+                return ((bool)(this["WriteOnClose"]));
+            }
+            set {
+                this["WriteOnClose"] = value;
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace MarketRecorder
             IconBox.Image = icn;
             BackColor = bckclr;
             Width = wdth;
+            Owner = MainForm;
             //add custon settings for notification display times
         }
         public void CallClose() => CloseBttn.PerformClick();

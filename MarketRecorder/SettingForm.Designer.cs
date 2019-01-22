@@ -130,12 +130,16 @@
             // CloseBttn
             // 
             this.CloseBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBttn.Location = new System.Drawing.Point(144, 450);
+            this.CloseBttn.BackgroundImage = global::MarketRecorder.Properties.Resources.Close;
+            this.CloseBttn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CloseBttn.FlatAppearance.BorderSize = 0;
+            this.CloseBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CloseBttn.ForeColor = System.Drawing.SystemColors.Control;
+            this.CloseBttn.Location = new System.Drawing.Point(191, 450);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
-            this.CloseBttn.Size = new System.Drawing.Size(74, 25);
+            this.CloseBttn.Size = new System.Drawing.Size(27, 25);
             this.CloseBttn.TabIndex = 5;
-            this.CloseBttn.Text = "Close";
             this.CloseBttn.UseVisualStyleBackColor = true;
             this.CloseBttn.Click += new System.EventHandler(this.CloseBttn_Click);
             // 
