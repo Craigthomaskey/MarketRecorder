@@ -37,7 +37,12 @@
             this.RecordingTimeGroup = new System.Windows.Forms.GroupBox();
             this.CloseBttn = new System.Windows.Forms.Button();
             this.NameLbl = new System.Windows.Forms.Label();
+            this.SettingsScroll = new System.Windows.Forms.VScrollBar();
+            this.MainContainer = new System.Windows.Forms.Panel();
+            this.ScrollContainer = new System.Windows.Forms.Panel();
             this.RecordingTimeGroup.SuspendLayout();
+            this.MainContainer.SuspendLayout();
+            this.ScrollContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // StartTimePicker
@@ -120,7 +125,7 @@
             this.RecordingTimeGroup.Controls.Add(this.EndTimeLbl);
             this.RecordingTimeGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RecordingTimeGroup.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RecordingTimeGroup.Location = new System.Drawing.Point(12, 36);
+            this.RecordingTimeGroup.Location = new System.Drawing.Point(5, 3);
             this.RecordingTimeGroup.Name = "RecordingTimeGroup";
             this.RecordingTimeGroup.Size = new System.Drawing.Size(200, 124);
             this.RecordingTimeGroup.TabIndex = 4;
@@ -135,33 +140,68 @@
             this.CloseBttn.FlatAppearance.BorderSize = 0;
             this.CloseBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CloseBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.CloseBttn.Location = new System.Drawing.Point(191, 450);
+            this.CloseBttn.Location = new System.Drawing.Point(216, 876);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
-            this.CloseBttn.Size = new System.Drawing.Size(27, 25);
+            this.CloseBttn.Size = new System.Drawing.Size(20, 21);
             this.CloseBttn.TabIndex = 5;
             this.CloseBttn.UseVisualStyleBackColor = true;
             this.CloseBttn.Click += new System.EventHandler(this.CloseBttn_Click);
             // 
             // NameLbl
             // 
+            this.NameLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.NameLbl.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NameLbl.Location = new System.Drawing.Point(12, 9);
+            this.NameLbl.Location = new System.Drawing.Point(10, 5);
             this.NameLbl.Name = "NameLbl";
-            this.NameLbl.Size = new System.Drawing.Size(200, 20);
+            this.NameLbl.Size = new System.Drawing.Size(225, 20);
             this.NameLbl.TabIndex = 6;
             this.NameLbl.Text = "Name";
             this.NameLbl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // SettingsScroll
+            // 
+            this.SettingsScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.SettingsScroll.LargeChange = 50;
+            this.SettingsScroll.Location = new System.Drawing.Point(216, 34);
+            this.SettingsScroll.Maximum = 300;
+            this.SettingsScroll.Name = "SettingsScroll";
+            this.SettingsScroll.Size = new System.Drawing.Size(20, 838);
+            this.SettingsScroll.SmallChange = 25;
+            this.SettingsScroll.TabIndex = 8;
+            this.SettingsScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SettingsScroll_Scroll);
+            // 
+            // MainContainer
+            // 
+            this.MainContainer.Controls.Add(this.RecordingTimeGroup);
+            this.MainContainer.Location = new System.Drawing.Point(1, 1);
+            this.MainContainer.Name = "MainContainer";
+            this.MainContainer.Size = new System.Drawing.Size(211, 486);
+            this.MainContainer.TabIndex = 9;
+            // 
+            // ScrollContainer
+            // 
+            this.ScrollContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ScrollContainer.Controls.Add(this.MainContainer);
+            this.ScrollContainer.Location = new System.Drawing.Point(0, 30);
+            this.ScrollContainer.Name = "ScrollContainer";
+            this.ScrollContainer.Size = new System.Drawing.Size(240, 871);
+            this.ScrollContainer.TabIndex = 10;
             // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(222, 480);
+            this.ClientSize = new System.Drawing.Size(240, 901);
+            this.Controls.Add(this.SettingsScroll);
             this.Controls.Add(this.NameLbl);
             this.Controls.Add(this.CloseBttn);
-            this.Controls.Add(this.RecordingTimeGroup);
+            this.Controls.Add(this.ScrollContainer);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SettingForm";
@@ -169,6 +209,8 @@
             this.Text = "SettingForm";
             this.RecordingTimeGroup.ResumeLayout(false);
             this.RecordingTimeGroup.PerformLayout();
+            this.MainContainer.ResumeLayout(false);
+            this.ScrollContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -184,5 +226,8 @@
         private System.Windows.Forms.GroupBox RecordingTimeGroup;
         private System.Windows.Forms.Button CloseBttn;
         private System.Windows.Forms.Label NameLbl;
+        private System.Windows.Forms.VScrollBar SettingsScroll;
+        private System.Windows.Forms.Panel MainContainer;
+        private System.Windows.Forms.Panel ScrollContainer;
     }
 }

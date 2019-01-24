@@ -1,0 +1,26 @@
+﻿Change Notes
+
+Market Recorder (0.0.1.1)
+Build 1 Initial Release
+1.	Added settings form
+2.	Added notification logic
+3.	Added icons for buttons
+4.	Added icon for application (It's a chicken!)
+5.	Added resize logic
+6.	Added time picking logic for each contract
+7.	Added contract and TTAPI logic
+8.	Added contract controls
+9.	Added maarket recording logic and data saving logic
+10.	Added auto write save file logic
+	a.	Made several timing settings
+11.	Added settings menu
+	a.	Force save logic
+	b.	Force write data
+	c.	Change save timeing intervals
+	d.	SIM login
+	e.	Show notifications
+	f.	Pause recoding all contracts
+12.	Added live display
+13.	Added save seprate window files
+14.	Added record all day/window only logic
+15.	

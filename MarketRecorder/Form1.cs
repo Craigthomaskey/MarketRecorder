@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +29,19 @@ namespace MarketRecorder
         private void SizeMouseUp(object sender, MouseEventArgs e) { dragging = false; Properties.Settings.Default.Size = Size; }
         private void ContDragOver(object sender, DragEventArgs e) { if (e.Data.HasInstrumentKeys() && apiInstance != null) e.Effect = DragDropEffects.Copy; }
         private void ContDragDrop(object sender, DragEventArgs e) { if (e.Data.HasInstrumentKeys()) foreach (InstrumentKey ik in e.Data.GetInstrumentKeys()) TTAPIF.CallInsturmentSubscription(ik); }
+        string ReleaseNotes = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-ReleaseNotes.txt";
+        private void versionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                string path = Directory.GetCurrentDirectory();
+                File.Copy(System.IO.Path.Combine(path, "MarketRecorder-ReleaseNotes.txt"), ReleaseNotes, true);
+                Process.Start("notepad.exe", ReleaseNotes);
+            }
+        }
 
         private void SettingsBttn_Click(object sender, EventArgs e) { SettingMenu.Show(PointToScreen(SettingsBttn.Location)); }
-        private void CloseBttn_Click(object sender, EventArgs e) { if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveDataCall(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
+        private void CloseBttn_Click(object sender, EventArgs e) { if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveAllDataCall(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
 
         private void saveContractsToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveContracts(false); }
 
@@ -36,6 +49,7 @@ namespace MarketRecorder
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (ApplicationDeployment.IsNetworkDeployed) versionToolStripMenuItem.Text = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
             Location = Properties.Settings.Default.Location; Size = Properties.Settings.Default.Size;
             MainContainer.HorizontalScroll.Enabled = false;
             notificationsToolStripMenuItem.Checked = Properties.Settings.Default.Popups;
@@ -90,12 +104,13 @@ namespace MarketRecorder
         ContractControl HighlightedContCtrl;
         public void ShiftSettingsForm(Contract cont, ContractControl contCtrl, string name)
         {
-            if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight(); HighlightedContCtrl = contCtrl;
+            if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight();
+            HighlightedContCtrl = contCtrl;
             SetForm.Visible = true; SetForm.ConnectContract(name, cont); SetForm.RepositionThis(Height, Width, Location);
         }
-        public void SettingFormClosed() { if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight(); }
+        public void SettingFormClosed() { if (HighlightedContCtrl != null) { HighlightedContCtrl.SettingsRemoveHighlight(); HighlightedContCtrl = null; } } 
 
-        private void writeDataToolStripMenuItem_Click(object sender, EventArgs e) { if (TTAPIF.SaveDataCall()) BuildNotification("Data Exported.", Properties.Resources.SaveNote); else BuildNotification("Export failed, file may be open in another location.", Properties.Resources.ChickenBlack); }
+        private void writeDataToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveAllDataCall(); BuildNotification("Data Exported.", Properties.Resources.SaveNote); }
         private void pauseRecordingToolStripMenuItem_Click(object sender, EventArgs e) { pauseRecordingToolStripMenuItem.Checked = TTAPIF.PauseRecording ^= true; }
         private void notificationsToolStripMenuItem_Click(object sender, EventArgs e) { notificationsToolStripMenuItem.Checked = Properties.Settings.Default.Popups ^= true; }
         private void sIMToolStripMenuItem_Click(object sender, EventArgs e) { sIMToolStripMenuItem.Checked = Properties.Settings.Default.SIM ^= true; }
@@ -121,6 +136,6 @@ namespace MarketRecorder
             else tsmi.BackColor = SystemColors.Control;
         }
 
-        
+
     }
 }

@@ -36,6 +36,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveContractsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.writeDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.writeOnCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataUpdateSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.secondsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.secondsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,7 +47,6 @@
             this.pauseRecordingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sIMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.writeOnCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SizeBttn = new System.Windows.Forms.Button();
             this.MoveBttn = new System.Windows.Forms.Button();
             this.SettingsBttn = new System.Windows.Forms.Button();
@@ -65,7 +65,7 @@
             this.MainContainer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MainContainer.Name = "MainContainer";
             this.MainContainer.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.MainContainer.Size = new System.Drawing.Size(473, 470);
+            this.MainContainer.Size = new System.Drawing.Size(473, 190);
             this.MainContainer.TabIndex = 1;
             this.MainContainer.WrapContents = false;
             this.MainContainer.DragDrop += new System.Windows.Forms.DragEventHandler(this.ContDragDrop);
@@ -94,6 +94,7 @@
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
             this.versionToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.versionToolStripMenuItem.Text = "Version";
+            this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -113,6 +114,14 @@
             this.writeDataToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.writeDataToolStripMenuItem.Text = "Write Data";
             this.writeDataToolStripMenuItem.Click += new System.EventHandler(this.writeDataToolStripMenuItem_Click);
+            // 
+            // writeOnCloseToolStripMenuItem
+            // 
+            this.writeOnCloseToolStripMenuItem.Name = "writeOnCloseToolStripMenuItem";
+            this.writeOnCloseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.writeOnCloseToolStripMenuItem.Text = "Write On Close";
+            this.writeOnCloseToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
+            this.writeOnCloseToolStripMenuItem.Click += new System.EventHandler(this.writeOnCloseToolStripMenuItem_Click);
             // 
             // dataUpdateSpeedToolStripMenuItem
             // 
@@ -199,14 +208,6 @@
             this.sIMToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
             this.sIMToolStripMenuItem.Click += new System.EventHandler(this.sIMToolStripMenuItem_Click);
             // 
-            // writeOnCloseToolStripMenuItem
-            // 
-            this.writeOnCloseToolStripMenuItem.Name = "writeOnCloseToolStripMenuItem";
-            this.writeOnCloseToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.writeOnCloseToolStripMenuItem.Text = "Write On Close";
-            this.writeOnCloseToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
-            this.writeOnCloseToolStripMenuItem.Click += new System.EventHandler(this.writeOnCloseToolStripMenuItem_Click);
-            // 
             // SizeBttn
             // 
             this.SizeBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -215,7 +216,7 @@
             this.SizeBttn.FlatAppearance.BorderSize = 0;
             this.SizeBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SizeBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.SizeBttn.Location = new System.Drawing.Point(480, 450);
+            this.SizeBttn.Location = new System.Drawing.Point(480, 164);
             this.SizeBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.SizeBttn.Name = "SizeBttn";
             this.SizeBttn.Size = new System.Drawing.Size(36, 25);
@@ -234,7 +235,7 @@
             this.MoveBttn.FlatAppearance.BorderSize = 0;
             this.MoveBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MoveBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.MoveBttn.Location = new System.Drawing.Point(480, 84);
+            this.MoveBttn.Location = new System.Drawing.Point(480, 105);
             this.MoveBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MoveBttn.Name = "MoveBttn";
             this.MoveBttn.Size = new System.Drawing.Size(36, 25);
@@ -253,7 +254,7 @@
             this.SettingsBttn.FlatAppearance.BorderSize = 0;
             this.SettingsBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SettingsBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.SettingsBttn.Location = new System.Drawing.Point(480, 46);
+            this.SettingsBttn.Location = new System.Drawing.Point(480, 60);
             this.SettingsBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.SettingsBttn.Name = "SettingsBttn";
             this.SettingsBttn.Size = new System.Drawing.Size(36, 25);
@@ -270,7 +271,7 @@
             this.CloseBttn.FlatAppearance.BorderSize = 0;
             this.CloseBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CloseBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.CloseBttn.Location = new System.Drawing.Point(480, 5);
+            this.CloseBttn.Location = new System.Drawing.Point(480, 14);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
             this.CloseBttn.Size = new System.Drawing.Size(36, 25);
@@ -284,7 +285,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(526, 480);
+            this.ClientSize = new System.Drawing.Size(526, 200);
             this.Controls.Add(this.SizeBttn);
             this.Controls.Add(this.MoveBttn);
             this.Controls.Add(this.SettingsBttn);
@@ -295,10 +296,10 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximumSize = new System.Drawing.Size(526, 2000);
-            this.MinimumSize = new System.Drawing.Size(526, 480);
+            this.MinimumSize = new System.Drawing.Size(526, 200);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
+            this.Text = "Market Recorder";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.ContDragDrop);

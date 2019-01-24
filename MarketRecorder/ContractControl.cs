@@ -28,10 +28,10 @@ namespace MarketRecorder
         private void SettingsBttn_Click(object sender, EventArgs e)
         {
             //open settings panel and adjust the controls to effect the linked contract
-            SettingsBttn.BackColor = SystemColors.ControlDark;
+            BackColor = SystemColors.Control; BorderStyle = BorderStyle.FixedSingle;
             MainForm.ShiftSettingsForm(LinkedCont, this, MainLabel.Text);
         }
-        public void SettingsRemoveHighlight() => SettingsBttn.BackColor = SystemColors.Control;
+        public void SettingsRemoveHighlight() { BackColor = SystemColors.Control; BorderStyle = BorderStyle.None; }
 
 
 

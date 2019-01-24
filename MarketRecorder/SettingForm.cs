@@ -13,13 +13,22 @@ namespace MarketRecorder
     public partial class SettingForm : Form
     {
         public SettingForm() { InitializeComponent(); }
-        public void RepositionThis(int hght, int wdth, Point lctn) { Height = hght; Location = new Point(lctn.X + wdth, lctn.Y); }
+        public void RepositionThis(int hght, int wdth, Point lctn)
+        {
+            Height = hght; Location = new Point(lctn.X + wdth, lctn.Y);
+
+            int scrollHeight = (MainContainer.Height - ScrollContainer.Height);
+            if (scrollHeight > 0) { SettingsScroll.Maximum = scrollHeight; SettingsScroll.Enabled = true; Width = 240; }
+            else { SettingsScroll.Enabled = false; Width = 212; }
+        }
         Form1 MainForm;
         public void Init(Form1 f)
         {
             MainForm = f;
             Owner = MainForm;
+            ShowInTaskbar = false;
         }
+    
         private void CloseBttn_Click(object sender, EventArgs e)        {            Hide(); MainForm.SettingFormClosed();        }
 
 
@@ -52,5 +61,14 @@ namespace MarketRecorder
         {
             LinkedCont.RecordAllDay = AllDayCheck.Checked;
         }
+
+        private void SettingsScroll_Scroll(object sender, ScrollEventArgs e)
+        {
+            ScrollContainer.SuspendLayout();
+            MainContainer.Location = new Point(0, 0 - SettingsScroll.Value);
+            ScrollContainer.ResumeLayout();
+        }
+
+
     }
 }

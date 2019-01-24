@@ -11,12 +11,12 @@ namespace MarketRecorder
 {
     public class TTAPIFunctions : IDisposable
     {
-        Form1 MainForm; UniversalLoginTTAPI apiInstance; UIDispatcher m_disp = null; Timer SaveTImer;
+        Form1 MainForm; UniversalLoginTTAPI apiInstance; UIDispatcher m_disp = null; 
         bool m_disposed = false; object m_lock = new object(); string m_username = "KWILSON"; string m_password = "wt2626wt";
         string SavePath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Logs\MaxData {0} " + DateTime.Today.ToString("yyyy-MM-dd") + ".csv";
         string ContConfigPath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-Contracts.txt";
-        public List<Contract> ContList = new List<Contract>();  List<string[]> DataToSaveList = new List<string[]>(); List<string[]> WindowDataToSaveList = new List<string[]>();
-        List<string> HeadingsList = new List<string>() { "Time", "Contract", "Quantity", "Price", "Direction", "Ask Vol", "Bid Vol", "Market/Firm", "Order Tag", "Trader ID", "Order Type", "Fill Source" };
+        public List<Contract> ContList = new List<Contract>();  
+        List<string> HeadingsList = new List<string>() { "Time", "Contract", "Quantity", "Price", "Direction", "Ask Vol", "Bid Vol", "Market/Firm", "Order Tag", "Trader ID", "Order Type", "Buy/Sell" };
 
         public void Init(Form1 f, bool sim)
         {
@@ -32,8 +32,6 @@ namespace MarketRecorder
         {
             MainForm.XtraderConnected(apiInstance);
             MainForm.BuildNotification(LoadSavedContracts(), Properties.Resources.LoadNote);
-            //start timer for saving data (?per minute?)
-            SaveTImer = new Timer(60000); SaveTImer.Elapsed += SaveTImer_Elapsed; SaveTImer.Enabled = true;
         }
         
 
@@ -69,11 +67,15 @@ namespace MarketRecorder
         }
 
         public bool PauseRecording = false;
-        public void IncomingData(string[] data) { if(!PauseRecording) DataToSaveList.Add(data); }
-        private void SaveTImer_Elapsed(object sender, ElapsedEventArgs e) { SaveDataCall(); SaveTImer.Interval = Properties.Settings.Default.WriteSpeed; }            
-        public bool SaveDataCall() { if (SaveData()) { DataToSaveList.Clear(); return true; } else return false; }
+        public void SaveAllDataCall()
+        {
+            foreach (Contract cont in ContList)
+            {
+              cont.SaveDataCall();
+            }
+        } 
 
-        public bool SaveData()
+        public bool SaveData(List<string[]> data)
         {
             string saveFile = string.Format(SavePath, "Main");
 
@@ -84,15 +86,15 @@ namespace MarketRecorder
                     tempHeaders += HeadingsList[i] + ",";
                 File.WriteAllText(saveFile, tempHeaders + Environment.NewLine);
             }
-            if (DataToSaveList.Count > 0)
+            if (data.Count > 0)
             {
                 try
                 {
                     string tempLine = "";
-                    for (int i = 0; i < DataToSaveList.Count; i++)
+                    for (int i = 0; i < data.Count; i++)
                     {
-                        for (int d = 0; d < DataToSaveList[i].Count(); d++)
-                            tempLine += DataToSaveList[i][d] + ",";
+                        for (int d = 0; d < data[i].Count(); d++)
+                            tempLine += data[i][d] + ",";
                         tempLine += Environment.NewLine;
                     }
                     File.AppendAllText(saveFile, tempLine); return true;
@@ -102,8 +104,7 @@ namespace MarketRecorder
             else return false;
         }
 
-        public void IncomingWindowData(string[] data) { WindowDataToSaveList.Add(data); }
-        public bool SaveWindowData(string name)
+        public bool SaveWindowData(string name, List<string[]> data)
         {
             string saveFile = string.Format(SavePath, name);
             if (!File.Exists(saveFile))
@@ -113,15 +114,15 @@ namespace MarketRecorder
                     tempHeaders += HeadingsList[i] + ",";
                 File.WriteAllText(saveFile, tempHeaders + Environment.NewLine);
             }
-            if (WindowDataToSaveList.Count > 0)
+            if (data.Count > 0)
             {
                 try
                 {
                     string tempLine = "";
-                    for (int i = 0; i < WindowDataToSaveList.Count; i++)
+                    for (int i = 0; i < data.Count; i++)
                     {
-                        for (int d = 0; d < WindowDataToSaveList[i].Count(); d++)
-                            tempLine += WindowDataToSaveList[i][d] + ",";
+                        for (int d = 0; d < data[i].Count(); d++)
+                            tempLine += data[i][d] + ",";
                         tempLine += Environment.NewLine;
                     }
                     File.AppendAllText(saveFile, tempLine); return true;
