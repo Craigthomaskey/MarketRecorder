@@ -51,17 +51,19 @@ namespace MarketRecorder
             else OutputName = Instrument.Product.Name + " " + Instrument.GetFormattedName(InstrumentNameFormat.Expiry);
 
             ContControl = MainForm.BuildControl(Instrument.GetFormattedName(InstrumentNameFormat.Normal), this, OutputName); if (ContControl == null) TTAPIF.CallBackCancel(this);
-
-            SaveTImer = new Timer(60000); SaveTImer.Elapsed += SaveTImer_Elapsed; SaveTImer.Enabled = true;
         }
         public void DeathCall() { TTAPIF.CallBackCancel(this); }
 
 
 
-        private void SaveTImer_Elapsed(object sender, ElapsedEventArgs e) { SaveDataCall(); SaveTImer.Interval = Properties.Settings.Default.WriteSpeed; }
-        public bool SaveDataCall() { if (TTAPIF.SaveData(DataList)) { DataList.Clear(); return true; } else return false; }
 
 
+
+        public void ClearListsCall(int type)
+        {
+            if (type == 1) DataList.Clear();
+            else WindowDataList.Clear();
+        }
 
 
 
@@ -128,7 +130,7 @@ namespace MarketRecorder
                 ContControl.PassData(tempList);
                 if (RecordAllDay || IsTimeWindow()) DataList.Add(tempList);
                 if (IsTimeWindow() && SeperateFileForWindowRecord) { IsSpeprateData = true; WindowDataList.Add(tempList); }
-                else if (IsSpeprateData && DateTime.Now > EndRecordWindowTime) { IsSpeprateData = false; TTAPIF.SaveWindowData(Instrument.GetFormattedName(InstrumentNameFormat.Normal), WindowDataList); }
+                else if (IsSpeprateData && DateTime.Now > EndRecordWindowTime) { IsSpeprateData = false; TTAPIF.DataSaveCall(OutputName, 2); }
             }
         }
 

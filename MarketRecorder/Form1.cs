@@ -25,10 +25,21 @@ namespace MarketRecorder
         private void LocationMouseUp(object sender, MouseEventArgs e) { mouseDown = false; var screen = Screen.FromPoint(Location); Properties.Settings.Default.Location = Location; }
         private bool dragging = false; private Point dragCursorPoint; private Point dragFormPoint;
         private void SizeMouseDown(object sender, MouseEventArgs e) { dragging = true; dragCursorPoint = Cursor.Position; dragFormPoint = Location; }
-        private void SizeMouseMove(object sender, MouseEventArgs e) { if (dragging) { Point dif = Point.Subtract(Cursor.Position, new Size(dragFormPoint)); Size = new Size(dif); if (SetForm.Visible) SetForm.RepositionThis(Height, Width, Location); } }
+        private void SizeMouseMove(object sender, MouseEventArgs e) { if (dragging) { Point dif = Point.Subtract(Cursor.Position, new Size(dragFormPoint)); Size = new Size(dif); if (SetForm.Visible) SetForm.RepositionThis(Height, Width, Location); }  ScrollSizing(); }
         private void SizeMouseUp(object sender, MouseEventArgs e) { dragging = false; Properties.Settings.Default.Size = Size; }
         private void ContDragOver(object sender, DragEventArgs e) { if (e.Data.HasInstrumentKeys() && apiInstance != null) e.Effect = DragDropEffects.Copy; }
         private void ContDragDrop(object sender, DragEventArgs e) { if (e.Data.HasInstrumentKeys()) foreach (InstrumentKey ik in e.Data.GetInstrumentKeys()) TTAPIF.CallInsturmentSubscription(ik); }
+        void ChangeFormWidth(int i) { MaximumSize = new Size(i, 2000); MinimumSize = new Size(i, 200); }        
+        void ScrollSizing()
+        {
+            DisplayScroll.Height = ScrollContainer.Height - 3;
+            int scrollHeight = MainContainer.Height - ScrollContainer.Height;
+            if (scrollHeight > 0)            {                DisplayScroll.Maximum = scrollHeight + 20; DisplayScroll.Enabled = true;                ChangeFormWidth(550);            }
+            else            {                DisplayScroll.Enabled = false;                ChangeFormWidth(533);            }
+            try { DisplayScroll.SmallChange = scrollHeight / 10; DisplayScroll.LargeChange = scrollHeight / 5; }
+            catch { DisplayScroll.SmallChange = 20; DisplayScroll.LargeChange = 45; }
+        }
+        private void DisplayScroll_Scroll(object sender, ScrollEventArgs e)        {            ScrollContainer.SuspendLayout();            MainContainer.Location = new Point(0, 0 - DisplayScroll.Value);        }
         string ReleaseNotes = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-ReleaseNotes.txt";
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -39,19 +50,24 @@ namespace MarketRecorder
                 Process.Start("notepad.exe", ReleaseNotes);
             }
         }
+        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
+            if (tsmi.Checked) tsmi.BackColor = SystemColors.ControlLight;
+            else tsmi.BackColor = SystemColors.Control;
+        }
+
 
         private void SettingsBttn_Click(object sender, EventArgs e) { SettingMenu.Show(PointToScreen(SettingsBttn.Location)); }
         private void CloseBttn_Click(object sender, EventArgs e) { if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveAllDataCall(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
-
         private void saveContractsToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveContracts(false); }
-
         public Form1() => InitializeComponent();
-
         private void Form1_Load(object sender, EventArgs e)
         {
+            MainContainer.VerticalScroll.Enabled = false; MainContainer.HorizontalScroll.Enabled = false;
+
             if (ApplicationDeployment.IsNetworkDeployed) versionToolStripMenuItem.Text = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
             Location = Properties.Settings.Default.Location; Size = Properties.Settings.Default.Size;
-            MainContainer.HorizontalScroll.Enabled = false;
             notificationsToolStripMenuItem.Checked = Properties.Settings.Default.Popups;
             sIMToolStripMenuItem.Checked = Properties.Settings.Default.SIM;
             writeOnCloseToolStripMenuItem.Checked = Properties.Settings.Default.WriteOnClose;
@@ -67,9 +83,7 @@ namespace MarketRecorder
         }
         private void DropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
         private void SettingMenu_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
-
-        private void Form1_Shown(object sender, EventArgs e) { TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, Properties.Settings.Default.SIM); SetForm = new SettingForm(); SetForm.Init(this); }
-
+        private void Form1_Shown(object sender, EventArgs e) { TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, Properties.Settings.Default.SIM); SetForm = new SettingForm(); SetForm.Init(this); ScrollSizing(); }
         public void XtraderConnected(UniversalLoginTTAPI uapi) { apiInstance = uapi; BuildNotification("Xtrader connected.", Properties.Resources.ConnectedNote); }
 
 
@@ -94,21 +108,26 @@ namespace MarketRecorder
         {
             if (!ContControlDict.ContainsKey(name))
             {
-                ContractControl CC = new ContractControl(); CC.Init(name, cont, this, dispName); ContControlDict.Add(name, CC); MainContainer.Controls.Add(CC);
-                foreach (var v in ContControlDict) MainContainer.Controls.SetChildIndex(v.Value, ContControlDict.Values.ToList().IndexOf(v.Value)); return CC;
+                ContractControl CC = new ContractControl();
+                CC.Init(name, cont, this, dispName);
+                ContControlDict.Add(name, CC);
+                MainContainer.Controls.Add(CC); MainContainer.Height += CC.Height; ScrollSizing();
+                foreach (var v in ContControlDict)
+                    MainContainer.Controls.SetChildIndex(v.Value, ContControlDict.Values.ToList().IndexOf(v.Value));
+                return CC;
             }
             else { return null; }
         }
-        public void ControlDeathCall(string name, ContractControl cont) { MainContainer.Controls.Remove(cont); ContControlDict.Remove(name); }
+        public void ControlDeathCall(string name, ContractControl cont) { MainContainer.Controls.Remove(cont); MainContainer.Height -= cont.Height;ScrollSizing(); ContControlDict.Remove(name);}
 
         ContractControl HighlightedContCtrl;
         public void ShiftSettingsForm(Contract cont, ContractControl contCtrl, string name)
         {
-            if (HighlightedContCtrl != null) HighlightedContCtrl.SettingsRemoveHighlight();
-            HighlightedContCtrl = contCtrl;
+            if (HighlightedContCtrl != null) HighlightedContCtrl.BorderStyle = BorderStyle.None;
+            HighlightedContCtrl = contCtrl; HighlightedContCtrl.BorderStyle = BorderStyle.FixedSingle;
             SetForm.Visible = true; SetForm.ConnectContract(name, cont); SetForm.RepositionThis(Height, Width, Location);
         }
-        public void SettingFormClosed() { if (HighlightedContCtrl != null) { HighlightedContCtrl.SettingsRemoveHighlight(); HighlightedContCtrl = null; } } 
+        public void SettingFormClosed() { if (HighlightedContCtrl != null) { HighlightedContCtrl.BorderStyle = BorderStyle.None; HighlightedContCtrl = null; } } 
 
         private void writeDataToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveAllDataCall(); BuildNotification("Data Exported.", Properties.Resources.SaveNote); }
         private void pauseRecordingToolStripMenuItem_Click(object sender, EventArgs e) { pauseRecordingToolStripMenuItem.Checked = TTAPIF.PauseRecording ^= true; }
@@ -129,13 +148,32 @@ namespace MarketRecorder
             SMI.Checked = true;
         }
 
-        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void openSaveDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
-            if (tsmi.Checked) tsmi.BackColor = SystemColors.ControlLight;
-            else tsmi.BackColor = SystemColors.Control;
+
         }
 
+        private void changeDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

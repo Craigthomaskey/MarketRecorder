@@ -27,11 +27,8 @@ namespace MarketRecorder
         private void CloseBttn_Click(object sender, EventArgs e) { LinkedCont.DeathCall(); MainForm.ControlDeathCall(Name, this); }
         private void SettingsBttn_Click(object sender, EventArgs e)
         {
-            //open settings panel and adjust the controls to effect the linked contract
-            BackColor = SystemColors.Control; BorderStyle = BorderStyle.FixedSingle;
             MainForm.ShiftSettingsForm(LinkedCont, this, MainLabel.Text);
         }
-        public void SettingsRemoveHighlight() { BackColor = SystemColors.Control; BorderStyle = BorderStyle.None; }
 
 
 
