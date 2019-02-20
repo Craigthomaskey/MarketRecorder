@@ -113,6 +113,16 @@ namespace MarketRecorder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ErrorNote {
+            get {
+                object obj = ResourceManager.GetObject("ErrorNote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LoadNote {
             get {
                 object obj = ResourceManager.GetObject("LoadNote", resourceCulture);
@@ -173,9 +183,39 @@ namespace MarketRecorder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SettingsForNotifications {
+            get {
+                object obj = ResourceManager.GetObject("SettingsForNotifications", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SettingsForNotificationsV2 {
+            get {
+                object obj = ResourceManager.GetObject("SettingsForNotificationsV2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Size {
             get {
                 object obj = ResourceManager.GetObject("Size", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UploadNote {
+            get {
+                object obj = ResourceManager.GetObject("UploadNote", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

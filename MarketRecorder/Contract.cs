@@ -37,9 +37,10 @@ namespace MarketRecorder
                 fs = new FillsSubscription(apiInstance.Session, Dispatcher.Current); fs.FillAdded += new EventHandler<FillAddedEventArgs>(fs_FillAdded); fs.Start();
                 Instrument = e.Instrument; SetUp();
             }
+            else if (e.IsFinal) { DeathCall(); }
         }
 
-        string OutputName = ""; Timer SaveTImer;
+        string OutputName = "";
         public void SetUp()
         {
             if (StartRecordWindowTime == DateTime.MinValue || EndRecordWindowTime == DateTime.MinValue)
@@ -76,7 +77,7 @@ namespace MarketRecorder
             }
         }
 
-        bool IsSpeprateData = false;
+
         private void tsSub_Update(object sender, TimeAndSalesEventArgs e)
         {
             foreach (TimeAndSalesData tsData in e.Data)
@@ -84,58 +85,123 @@ namespace MarketRecorder
                 Price ltp = tsData.TradePrice;
                 Quantity ltq = tsData.TradeQuantity;
 
-                for (int i = 0; i < DataList.Count; i++) { if (DataList[i][0] == tsData.TimeStamp.ToString("HH:mm:ss:ffff") && DataList[i][2] == ltq.ToString() && DataList[i][1] == Instrument.GetFormattedName(InstrumentNameFormat.Normal)) { DataList[i][4] = tsData.Direction.ToString(); return; } }
+                string orderKey = OutputName + "MO" + AllCount.ToString("D4") + ltq;
 
-                string[] tempList = new string[12];
-                tempList[0] = tsData.TimeStamp.ToString("HH:mm:ss:ffff");
-                tempList[1] = OutputName;
-                tempList[2] = ltq.ToString();
-                tempList[3] = ltp.ToDouble().ToString();
-                tempList[4] = tsData.Direction.ToString();
-                tempList[5] = AskVolume.ToString();
-                tempList[6] = BidVolume.ToString();
-                tempList[7] = "MO";
+                if (LastOrderKey.Contains("FO"))
+                {
+                    string[] temp = DataDict[LastOrderKey];
+                    if (temp[3] == ltq.ToString() && temp[2] == OutputName && temp[4] == ltp.ToString())
+                    {
+                        DateTime dateTime = DateTime.ParseExact(temp[1], "HH:mm:ss:ffff", CultureInfo.InvariantCulture);
+                        if (Math.Abs(dateTime.Subtract(tsData.TimeStamp).Milliseconds) < 40)
+                        {
+                            string[] data = new string[13];
+                            data[0] = temp[0];
+                            data[1] = temp[1];
+                            data[2] = temp[2];
+                            data[3] = temp[3];
+                            data[4] = temp[4];
+                            data[5] = temp[5];
+                            data[6] = "   ||   ";
+                            data[7] = DateTime.Now.ToString("HH:mm:ss:ffff");
+                            data[8] = tsData.TimeStamp.ToString("HH:mm:ss:ffff");
+                            data[9] = OutputName;
+                            data[10] = ltq.ToString();
+                            data[11] = ltp.ToString();
+                            data[12] = tsData.Direction.ToString();
 
-                RecordingSettings(tempList);   
+                            CrossedDict.Add(LastOrderKey, data);
+                        }
+
+                        temp[5] = tsData.Direction.ToString();
+                        DataDict[LastOrderKey] = temp;
+                    }
+                }
+                else
+                {
+                    string[] data = new string[13];
+                    data[0] = DateTime.Now.ToString("HH:mm:ss:ffff");
+                    data[1] = tsData.TimeStamp.ToString("HH:mm:ss:ffff");
+                    data[2] = OutputName;
+                    data[3] = ltq.ToString();
+                    data[4] = ltp.ToString();
+                    data[5] = tsData.Direction.ToString();
+                    data[6] = AskVolume.ToString();
+                    data[7] = BidVolume.ToString();
+                    data[8] = "MO";
+
+                    DataManager(orderKey, data);
+                }                
             }
         }
+
 
         private void fs_FillAdded(object sender, FillAddedEventArgs e)
         {
             if (e.Fill.InstrumentKey == Instrument.Key)
             {
-                string[] tempList = new string[12];
-                tempList[0] = e.Fill.TransactionDateTime.ToString("HH:mm:ss:ffff");
-                tempList[1] = OutputName;
-                tempList[2] = e.Fill.Quantity.ToString();
-                tempList[3] = e.Fill.MatchPrice.ToDouble().ToString();
-                tempList[4] = "";
-                tempList[5] = AskVolume.ToString();
-                tempList[6] = BidVolume.ToString();
-                tempList[7] = "FO";
-                tempList[8] = e.Fill.OrderTag;
-                tempList[9] = e.Fill.TraderId;
-                tempList[10] = e.Fill.OrderType.ToString();
-                tempList[11] = e.Fill.BuySell.ToString();
+                string orderKey = OutputName + "FO" + AllCount.ToString("D4") + e.Fill.Quantity;
 
-                RecordingSettings(tempList);
-            }
-        }
+                string[] data = new string[13];
+                data[0] = DateTime.Now.ToString("HH:mm:ss:ffff");
+                data[1] = e.Fill.TransactionDateTime.ToString("HH:mm:ss:ffff");
+                data[2] = OutputName;
+                data[3] = e.Fill.Quantity.ToString();
+                data[4] = e.Fill.MatchPrice.ToString();
+                data[5] = e.Fill.BuySell.ToString();
+                data[6] = AskVolume.ToString();
+                data[7] = BidVolume.ToString();
+                data[8] = "FO";
+                data[9] = e.Fill.OrderTag;
+                data[10] = e.Fill.TraderId;
+                data[11] = e.Fill.FillType.ToString();
+                data[12] = e.Fill.OrderDateTime.ToString("dd/MM/yy - HH:mm:ss:ffff");
 
-
-        void RecordingSettings(string[] tempList)
-        {
-            if (!TTAPIF.PauseRecording)
-            {
-                ContControl.PassData(tempList);
-                if (RecordAllDay || IsTimeWindow()) DataList.Add(tempList);
-                if (IsTimeWindow() && SeperateFileForWindowRecord) { IsSpeprateData = true; WindowDataList.Add(tempList); }
-                else if (IsSpeprateData && DateTime.Now > EndRecordWindowTime) { IsSpeprateData = false; TTAPIF.DataSaveCall(OutputName, 2); }
+                DataManager(orderKey, data);    
             }
         }
 
         bool IsTimeWindow() { if (DateTime.Now > StartRecordWindowTime && DateTime.Now < EndRecordWindowTime) return true; else return false; }
 
+
+        int AllCount = 0; string LastOrderKey = ""; bool IsSeperateData = false;
+        Dictionary<string, string[]> DataDict = new Dictionary<string, string[]>();
+        Dictionary<string, string[]> CrossedDict = new Dictionary<string, string[]>();
+        Dictionary<string, string[]> WindowDict = new Dictionary<string, string[]>();
+
+        void DataManager(string orderKey, string[] data)
+        {           
+            if (RecordAllDay || IsTimeWindow())
+            {
+                DataDict.Add(orderKey, data);
+                TTAPIF.IncommingData(DataDict, 0);
+                //need settings for cross data exports
+                TTAPIF.IncommingData(CrossedDict, 1);
+                if (IsTimeWindow() && SeperateFileForWindowRecord)
+                {
+                    IsSeperateData = true;
+                    WindowDict.Add(orderKey, data);
+                    TTAPIF.IncommingData(WindowDict, 2);
+                }
+                LastOrderKey = orderKey; AllCount++;
+            }
+            if (IsSeperateData && DateTime.Now > EndRecordWindowTime)
+            {
+                IsSeperateData = false;
+                TTAPIF.SaveWindowData(WindowDict, OutputName);
+            }
+            ContControl.PassData(data);
+        }
+
+
+
+
+
+        public string DriveUploadWindowFile()
+        {
+            if (DriveUploadType == 1 || DriveUploadType == 3) return OutputName;
+            else return "No";
+        }
 
 
 
@@ -152,24 +218,35 @@ namespace MarketRecorder
             EndRecordWindowTime = DateTime.ParseExact(info[5], "HH:mm:ss", CultureInfo.InvariantCulture);
             SeperateFileForWindowRecord = Convert.ToBoolean(info[6]);
             RecordAllDay = Convert.ToBoolean(info[7]);
+            DriveUploadType = Convert.ToInt32(info[8]);
         }
 
 
+      public  int DriveUploadType = 0;
         public string[] SaveInformation()
         {
-            string[] tempInfo = new string[8];
+            if (Instrument != null)
+            {
+                string[] tempInfo = new string[9];
 
-            //add all info to string[]
-            tempInfo[0] = Instrument.Product.Market.Name;
-            tempInfo[1] = Instrument.Product.Type.Name;
-            tempInfo[2] = Instrument.Product.Name;
-            tempInfo[3] = Instrument.GetFormattedName(InstrumentNameFormat.Expiry);
-            tempInfo[4] = StartRecordWindowTime.ToString("HH:mm:ss");
-            tempInfo[5] = EndRecordWindowTime.ToString("HH:mm:ss");
-            tempInfo[6] = SeperateFileForWindowRecord.ToString();
-            tempInfo[7] = RecordAllDay.ToString();
+                //add all info to string[]
+                tempInfo[0] = Instrument.Product.Market.Name;
+                tempInfo[1] = Instrument.Product.Type.Name;
+                tempInfo[2] = Instrument.Product.Name;
+                tempInfo[3] = Instrument.GetFormattedName(InstrumentNameFormat.Expiry);
+                tempInfo[4] = StartRecordWindowTime.ToString("HH:mm:ss");
+                tempInfo[5] = EndRecordWindowTime.ToString("HH:mm:ss");
+                tempInfo[6] = SeperateFileForWindowRecord.ToString();
+                tempInfo[7] = RecordAllDay.ToString();
+                tempInfo[8] = DriveUploadType.ToString();
 
-            return tempInfo;
+                return tempInfo;
+            }
+            else
+            {
+                DeathCall();
+                return null;
+            }
         }
 
 

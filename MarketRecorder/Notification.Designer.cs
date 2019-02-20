@@ -33,6 +33,7 @@
             this.CloseBttn = new System.Windows.Forms.Button();
             this.DurrationTimer = new System.Windows.Forms.Timer(this.components);
             this.IconBox = new System.Windows.Forms.PictureBox();
+            this.OptionsBttn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.IconBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,13 +42,14 @@
             this.MainLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainLabel.Location = new System.Drawing.Point(44, 5);
+            this.MainLabel.Location = new System.Drawing.Point(50, 5);
             this.MainLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.MainLabel.Name = "MainLabel";
-            this.MainLabel.Size = new System.Drawing.Size(368, 30);
+            this.MainLabel.Size = new System.Drawing.Size(373, 40);
             this.MainLabel.TabIndex = 0;
             this.MainLabel.Text = "This is a notification in case you need to know something!";
             this.MainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.MainLabel.Click += new System.EventHandler(this.MainLabel_Click);
             // 
             // CloseBttn
             // 
@@ -58,10 +60,10 @@
             this.CloseBttn.FlatAppearance.BorderSize = 0;
             this.CloseBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CloseBttn.ForeColor = System.Drawing.SystemColors.Control;
-            this.CloseBttn.Location = new System.Drawing.Point(416, 5);
+            this.CloseBttn.Location = new System.Drawing.Point(427, 5);
             this.CloseBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CloseBttn.Name = "CloseBttn";
-            this.CloseBttn.Size = new System.Drawing.Size(31, 31);
+            this.CloseBttn.Size = new System.Drawing.Size(18, 18);
             this.CloseBttn.TabIndex = 2;
             this.CloseBttn.UseVisualStyleBackColor = true;
             this.CloseBttn.Click += new System.EventHandler(this.CloseBttn_Click);
@@ -80,16 +82,35 @@
             this.IconBox.Location = new System.Drawing.Point(6, 5);
             this.IconBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.IconBox.Name = "IconBox";
-            this.IconBox.Size = new System.Drawing.Size(32, 31);
+            this.IconBox.Size = new System.Drawing.Size(40, 40);
             this.IconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.IconBox.TabIndex = 1;
             this.IconBox.TabStop = false;
+            this.IconBox.Click += new System.EventHandler(this.IconBox_Click);
+            // 
+            // OptionsBttn
+            // 
+            this.OptionsBttn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OptionsBttn.BackgroundImage = global::MarketRecorder.Properties.Resources.SettingsForNotificationsV2;
+            this.OptionsBttn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.OptionsBttn.Enabled = false;
+            this.OptionsBttn.FlatAppearance.BorderSize = 0;
+            this.OptionsBttn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OptionsBttn.ForeColor = System.Drawing.SystemColors.Control;
+            this.OptionsBttn.Location = new System.Drawing.Point(427, 27);
+            this.OptionsBttn.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.OptionsBttn.Name = "OptionsBttn";
+            this.OptionsBttn.Size = new System.Drawing.Size(18, 18);
+            this.OptionsBttn.TabIndex = 7;
+            this.OptionsBttn.UseVisualStyleBackColor = true;
+            this.OptionsBttn.Click += new System.EventHandler(this.OptionsBttn_Click);
             // 
             // Notification
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 40);
+            this.ClientSize = new System.Drawing.Size(450, 50);
+            this.Controls.Add(this.OptionsBttn);
             this.Controls.Add(this.CloseBttn);
             this.Controls.Add(this.IconBox);
             this.Controls.Add(this.MainLabel);
@@ -99,6 +120,7 @@
             this.Name = "Notification";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Notification";
+            this.Shown += new System.EventHandler(this.Notification_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.IconBox)).EndInit();
             this.ResumeLayout(false);
 
@@ -110,5 +132,6 @@
         private System.Windows.Forms.PictureBox IconBox;
         private System.Windows.Forms.Button CloseBttn;
         private System.Windows.Forms.Timer DurrationTimer;
+        private System.Windows.Forms.Button OptionsBttn;
     }
 }

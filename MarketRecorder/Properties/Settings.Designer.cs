@@ -94,5 +94,65 @@ namespace MarketRecorder.Properties {
                 this["WriteOnClose"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SaveDirectory {
+            get {
+                return ((string)(this["SaveDirectory"]));
+            }
+            set {
+                this["SaveDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DriveAutoConnect {
+            get {
+                return ((bool)(this["DriveAutoConnect"]));
+            }
+            set {
+                this["DriveAutoConnect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DriveAutoUpload {
+            get {
+                return ((bool)(this["DriveAutoUpload"]));
+            }
+            set {
+                this["DriveAutoUpload"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13:20:30")]
+        public string DriveUploadTime {
+            get {
+                return ((string)(this["DriveUploadTime"]));
+            }
+            set {
+                this["DriveUploadTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DriveUploadMainFile {
+            get {
+                return ((bool)(this["DriveUploadMainFile"]));
+            }
+            set {
+                this["DriveUploadMainFile"] = value;
+            }
+        }
     }
 }

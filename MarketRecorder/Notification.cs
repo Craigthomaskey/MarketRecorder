@@ -22,12 +22,51 @@ namespace MarketRecorder
             IconBox.Image = icn;
             BackColor = bckclr;
             Width = wdth;
-            Owner = MainForm;
-            //add custon settings for notification display times
         }
-        public void CallClose() => CloseBttn.PerformClick();
-        private void CloseBttn_Click(object sender, EventArgs e)        { DurrationTimer.Stop(); MainForm.NoteList.Remove(this); MainForm.NotificationPlacement(); Dispose();        }
-        private void DurrationTimer_Tick(object sender, EventArgs e)        =>            CallClose();
-        
+
+
+
+        // public void GetParent(Form1 f) => MainForm = f;
+
+        public string MainTextGet() => MainLabel.Text;
+
+
+
+        public void CallClose(bool placement)
+        {
+            DurrationTimer.Stop();
+            MainForm.NoteList.Remove(this);
+            if (placement) MainForm.NotificationPlacement();
+            Dispose();
+        }
+
+
+
+
+        private void CloseBttn_Click(object sender, EventArgs e) => CallClose(true);
+        private void DurrationTimer_Tick(object sender, EventArgs e) => CallClose(true);
+
+
+
+
+        private void Notification_Shown(object sender, EventArgs e)
+        {
+           // MainForm.NotificationPlacement();
+        }
+
+        private void MainLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void IconBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OptionsBttn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
