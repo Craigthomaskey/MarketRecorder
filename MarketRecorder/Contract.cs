@@ -110,9 +110,9 @@ namespace MarketRecorder
                             data[11] = ltp.ToString();
                             data[12] = tsData.Direction.ToString();
 
-                            CrossedDict.Add(LastOrderKey, data);
+                            if (!CrossedDict.ContainsKey(LastOrderKey)) CrossedDict.Add(LastOrderKey, data);
+                            else CrossedDict[LastOrderKey] = data;
                         }
-
                         temp[5] = tsData.Direction.ToString();
                         DataDict[LastOrderKey] = temp;
                     }
@@ -170,27 +170,31 @@ namespace MarketRecorder
         Dictionary<string, string[]> WindowDict = new Dictionary<string, string[]>();
 
         void DataManager(string orderKey, string[] data)
-        {           
-            if (RecordAllDay || IsTimeWindow())
+        {
+            try
             {
-                DataDict.Add(orderKey, data);
-                TTAPIF.IncommingData(DataDict, 0);
-                //need settings for cross data exports
-                TTAPIF.IncommingData(CrossedDict, 1);
-                if (IsTimeWindow() && SeperateFileForWindowRecord)
+                if (RecordAllDay || IsTimeWindow())
                 {
-                    IsSeperateData = true;
-                    WindowDict.Add(orderKey, data);
-                    TTAPIF.IncommingData(WindowDict, 2);
+                    DataDict.Add(orderKey, data);
+                    TTAPIF.IncommingData(DataDict, 0);
+                    //need settings for cross data exports
+                    TTAPIF.IncommingData(CrossedDict, 1);
+                    if (IsTimeWindow() && SeperateFileForWindowRecord)
+                    {
+                        IsSeperateData = true;
+                        WindowDict.Add(orderKey, data);
+                        TTAPIF.IncommingData(WindowDict, 2);
+                    }
+                    LastOrderKey = orderKey; AllCount++;
                 }
-                LastOrderKey = orderKey; AllCount++;
+                if (IsSeperateData && DateTime.Now > EndRecordWindowTime)
+                {
+                    IsSeperateData = false;
+                    TTAPIF.SaveWindowData(WindowDict, OutputName);
+                }
+                ContControl.PassData(data);
             }
-            if (IsSeperateData && DateTime.Now > EndRecordWindowTime)
-            {
-                IsSeperateData = false;
-                TTAPIF.SaveWindowData(WindowDict, OutputName);
-            }
-            ContControl.PassData(data);
+            catch { MainForm.BuildNotification("Huston we have a problem. OrderKey dropped!", Properties.Resources.ErrorNote, MainForm); }
         }
 
 

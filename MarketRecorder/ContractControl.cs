@@ -27,15 +27,21 @@ namespace MarketRecorder
         private void CloseBttn_Click(object sender, EventArgs e) { LinkedCont.DeathCall(); MainForm.ControlDeathCall(Name, this); }
         private void SettingsBttn_Click(object sender, EventArgs e)
         {
-            MainForm.ShiftSettingsForm(LinkedCont, this, MainLabel.Text);
+            if (this.BorderStyle == BorderStyle.None)
+                MainForm.ShiftSettingsForm(LinkedCont, this, MainLabel.Text);
+            else MainForm.SettingFormClosed();
         }
 
+        private void ContractControl_Load(object sender, EventArgs e)
+        {
 
+        }
 
-
-
-
-
-
+        private void ContractControl_Click(object sender, EventArgs e)
+        {
+            if (this.BorderStyle == BorderStyle.None)
+                MainForm.ShiftSettingsForm(LinkedCont, this, MainLabel.Text);
+            else MainForm.SettingFormClosed();
+        }
     }
 }

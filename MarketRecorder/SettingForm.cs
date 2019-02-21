@@ -17,7 +17,7 @@ namespace MarketRecorder
         public void RepositionThis(int hght, int wdth, Point lctn) { Height = hght; Location = new Point(lctn.X + wdth, lctn.Y); ScrollSizing(); }
         Form1 MainForm;
         public void Init(Form1 f) { MainForm = f; Owner = MainForm; ShowInTaskbar = false; }
-        private void CloseBttn_Click(object sender, EventArgs e) { Hide(); MainForm.SettingFormClosed(); }
+        private void CloseBttn_Click(object sender, EventArgs e) { MainForm.SettingFormClosed(); }
 
         Contract LinkedCont;
         public void ConnectContract(string name, Contract cont)
@@ -86,8 +86,8 @@ namespace MarketRecorder
             Properties.Settings.Default.DriveUploadMainFile = DriveMainFileCheck.Checked;
         }
 
-        private void DriveConnectButton_Click(object sender, EventArgs e) { MainForm.DriveConnectionLogic(); }
-        private void DriveUploadButton_Click(object sender, EventArgs e) { MainForm.DriveUploadLogic(); }
+        private void DriveConnectButton_Click(object sender, EventArgs e) { MainForm.DriveConnection(); }
+        private void DriveUploadButton_Click(object sender, EventArgs e) { MainForm.DriveUploadAsync(); }
 
         public void ChangeLastUploadTime(string s) => LastUploadLBL.Text = "Last Upload : " + s;
 

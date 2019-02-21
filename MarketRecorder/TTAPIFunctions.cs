@@ -15,7 +15,7 @@ namespace MarketRecorder
         Form1 MainForm; UniversalLoginTTAPI apiInstance; UIDispatcher m_disp = null; 
         bool m_disposed = false; object m_lock = new object(); string m_username = "KWILSON"; string m_password = "wt2626wt";
         string SavePath = @"{0}\{1} " + DateTime.Today.ToString("yyyy-MM-dd") + ".csv";
-        string ContConfigPath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-Contracts.txt";
+        string ContConfigPath = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorderR1-Contracts.txt";
         public List<Contract> ContList = new List<Contract>(); List<string[]> AllDataHoldList = new List<string[]>();
         public Dictionary<string, string[]> SavedDict = new Dictionary<string, string[]>();
         public Dictionary<string, string[]> DataDict = new Dictionary<string, string[]>();
@@ -65,7 +65,7 @@ namespace MarketRecorder
                     }
                     return "Started " + count + " saved contracts! Just a moment while connections are verified.";
                 }
-                else { return "Hmmm. Seems there is no saved contracts file."; }
+                else { File.WriteAllText(ContConfigPath, ""); return "Hmmm. Seems there is no saved contracts file. New config file automaticaly created!";  }
             }
             catch { return "Opps... Something went wrong while trying to load saved contracts. Some contracts might not have been loaded!"; }
         }

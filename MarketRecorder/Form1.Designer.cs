@@ -285,7 +285,6 @@
             // MainContainer
             // 
             this.MainContainer.AllowDrop = true;
-            this.MainContainer.AutoScroll = true;
             this.MainContainer.AutoSize = true;
             this.MainContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.MainContainer.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;

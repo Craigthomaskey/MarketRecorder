@@ -43,24 +43,11 @@ namespace MarketRecorder
         }
         private void DisplayScroll_Scroll(object sender, ScrollEventArgs e) { ScrollContainer.SuspendLayout(); MainContainer.Location = new Point(0, 0 - DisplayScroll.Value); }
         string ReleaseNotes = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorder-ReleaseNotes.txt";
-        private void versionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ApplicationDeployment.IsNetworkDeployed)
-            {
-                string path = Directory.GetCurrentDirectory();
-                File.Copy(System.IO.Path.Combine(path, "MarketRecorder-ReleaseNotes.txt"), ReleaseNotes, true);
-                Process.Start("notepad.exe", ReleaseNotes);
-            }
-        }
-        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
-            if (tsmi.Checked) tsmi.BackColor = SystemColors.ControlLight;
-            else tsmi.BackColor = SystemColors.Control;
-        }
+        private void versionToolStripMenuItem_Click(object sender, EventArgs e) { if (ApplicationDeployment.IsNetworkDeployed) { string path = Directory.GetCurrentDirectory(); File.Copy(System.IO.Path.Combine(path, "MarketRecorder-ReleaseNotes.txt"), ReleaseNotes, true); Process.Start("notepad.exe", ReleaseNotes); } }
+        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e) { ToolStripMenuItem tsmi = sender as ToolStripMenuItem; if (tsmi.Checked) tsmi.BackColor = SystemColors.ControlLight; else tsmi.BackColor = SystemColors.Control; }
 
         private void SettingsBttn_Click(object sender, EventArgs e) { SettingMenu.Show(PointToScreen(SettingsBttn.Location)); }
-        private void CloseBttn_Click(object sender, EventArgs e) { if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveData(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
+        private void CloseBttn_Click(object sender, EventArgs e) { WriteNoteCodes(); if (Properties.Settings.Default.WriteOnClose) TTAPIF.SaveData(); TTAPIF.SaveContracts(true); Properties.Settings.Default.Save(); TTAPIF.Dispose(); Application.Exit(); }
         private void saveContractsToolStripMenuItem_Click(object sender, EventArgs e) { TTAPIF.SaveContracts(false); }
         public Form1() => InitializeComponent();
         private void Form1_Load(object sender, EventArgs e)
@@ -87,42 +74,24 @@ namespace MarketRecorder
         }
         private void DropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
         private void SettingMenu_Closing(object sender, ToolStripDropDownClosingEventArgs e) { if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked) e.Cancel = true; }
-        private void Form1_Shown(object sender, EventArgs e) { TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, Properties.Settings.Default.SIM); SetForm = new SettingForm(); SetForm.Init(this); ScrollSizing(); if (Properties.Settings.Default.DriveAutoConnect) DriveConnectionLogic();        }
+        private void Form1_Shown(object sender, EventArgs e) { TTAPIF = new TTAPIFunctions(); TTAPIF.Init(this, Properties.Settings.Default.SIM); SetForm = new SettingForm(); SetForm.Init(this); ScrollSizing(); if (Properties.Settings.Default.DriveAutoConnect) DriveConnection(); }
         public void XtraderConnected(UniversalLoginTTAPI uapi) { apiInstance = uapi; BuildNotification("Xtrader connected.", Properties.Resources.ConnectedNote, this); }
+        private void WriteTimer_Tick(object sender, EventArgs e) { WriteTimer.Stop(); WriteTimer.Interval = Properties.Settings.Default.WriteSpeed; TTAPIF.SaveData(); WriteTimer.Start(); }
 
-        private void WriteTimer_Tick(object sender, EventArgs e)
-        {
-            WriteTimer.Stop();
-            WriteTimer.Interval = Properties.Settings.Default.WriteSpeed;
-            TTAPIF.SaveData();
-            WriteTimer.Start();
-        }
-
+        List<string> NoteCodes = new List<string>(); void WriteNoteCodes() { string tempLine = ""; foreach (string item in NoteCodes) tempLine += item + Environment.NewLine; File.WriteAllText(@"C:\Users\" + Environment.UserName + @"\Documents\KDM\Config\MarketRecorderR1-NoteCodes.txt", tempLine); }
         public List<Notification> NoteList = new List<Notification>();
-        public void BuildNotification(string text, Image img, Form1 f)
-        {
-            if (Properties.Settings.Default.Popups && text.Length > 0)
-            {
-                if (img == null) img = Properties.Resources.ChickenBlack;
-                Notification N = new Notification();
-                N.Init(f, text, img, BackColor, Width);
-                N.Show();
-                NoteList.Add(N);
-                NotificationPlacement();
-            }
-        }
+        public void BuildNotification(string text, Image img, Form1 f) { NoteCodes.Add(text); if (Properties.Settings.Default.Popups && text.Length > 0) { if (img == null) img = Properties.Resources.ChickenBlack; Notification N = new Notification(); N.Init(f, text, img, BackColor, Width); N.Show(); NoteList.Add(N); NotificationPlacement(); } }
         public void NotificationPlacement()
         {
             try
             {
                 int Stacker = 0;
-
                 for (int i = 0; i < NoteList.Count; i++)
                 {
                     Notification N = NoteList[i];
+                    bool x = N.InvokeRequired;
                     if (!N.IsDisposed)
                     {
-                        if (N.MainTextGet() == "") { NoteList.RemoveAt(i); i--; continue; }
                         if (i > 4)
                         {
                             if (N.InvokeRequired) N.Invoke(new Action(() => N.CallClose(false)));
@@ -132,15 +101,15 @@ namespace MarketRecorder
                         else
                         {
                             var screen = Screen.FromPoint(Location);
-                            if (N.InvokeRequired) N.Invoke(new Action(() => N.Location = new Point(Location.X, Location.Y - N.Height - Stacker)));
+                            if (N.InvokeRequired) N.BeginInvoke(new Action(() => N.Location = new Point(Location.X, Location.Y - N.Height - Stacker)));
                             else N.Location = new Point(Location.X, Location.Y - 50 - Stacker);
-                            Stacker += N.Height + 5;
+                            Stacker += N.Height + 0;
                         }
                     }
                     else { NoteList.RemoveAt(i); i--; }
                 }
             }
-            catch { }
+            catch (Exception e) { string s = e.Message; }
         }
 
         SortedDictionary<string, ContractControl> ContControlDict = new SortedDictionary<string, ContractControl>();
@@ -167,7 +136,7 @@ namespace MarketRecorder
             HighlightedContCtrl = contCtrl; HighlightedContCtrl.BorderStyle = BorderStyle.FixedSingle;
             SetForm.Visible = true; SetForm.ConnectContract(name, cont); SetForm.RepositionThis(Height, Width, Location);
         }
-        public void SettingFormClosed() { if (HighlightedContCtrl != null) { HighlightedContCtrl.BorderStyle = BorderStyle.None; HighlightedContCtrl = null; } }
+        public void SettingFormClosed() { SetForm.Hide(); if (HighlightedContCtrl != null) { HighlightedContCtrl.BorderStyle = BorderStyle.None; HighlightedContCtrl = null; } }
 
         private void writeDataToolStripMenuItem_Click(object sender, EventArgs e) { BuildNotification("Data Exported.", Properties.Resources.SaveNote, this); }
         private void pauseRecordingToolStripMenuItem_Click(object sender, EventArgs e) { pauseRecordingToolStripMenuItem.Checked = TTAPIF.PauseRecording ^= true; }
@@ -184,48 +153,21 @@ namespace MarketRecorder
         void ChangeWriteSpeed(int speed, ToolStripMenuItem SMI)
         {
             foreach (ToolStripMenuItem MI in dataUpdateSpeedToolStripMenuItem.DropDownItems) MI.Checked = false;
-            Properties.Settings.Default.WriteSpeed = speed;
-            SMI.Checked = true;
+            Properties.Settings.Default.WriteSpeed = speed; SMI.Checked = true;
         }
 
-
-        private void dataDisplayToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DataDisplay DatDisp = new DataDisplay();
-            DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show();
-            DatDisp.WriteData(TTAPIF.DataDict, "All Data");
-        }
-        private void crossDataDisplayToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DataDisplay DatDisp = new DataDisplay();
-            DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show();
-            DatDisp.WriteData(TTAPIF.CrossedDataDict, "Crossed Data");
-        }
-        private void savedDataDisplayToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DataDisplay DatDisp = new DataDisplay();
-            DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show();
-            DatDisp.WriteData(TTAPIF.SavedDict, "Saved Data");
-        }
-
-        private void openSaveDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Properties.Settings.Default.SaveDirectory != "") Process.Start(Properties.Settings.Default.SaveDirectory);
-            else BuildNotification("No save path selected :(", Properties.Resources.ChickenBlack, this);
-        }
+        private void dataDisplayToolStripMenuItem_Click(object sender, EventArgs e) { DataDisplay DatDisp = new DataDisplay(); DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show(); DatDisp.WriteData(TTAPIF.DataDict, "All Data"); }
+        private void crossDataDisplayToolStripMenuItem_Click(object sender, EventArgs e) { DataDisplay DatDisp = new DataDisplay(); DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show(); DatDisp.WriteData(TTAPIF.CrossedDataDict, "Crossed Data"); }
+        private void savedDataDisplayToolStripMenuItem_Click(object sender, EventArgs e) { DataDisplay DatDisp = new DataDisplay(); DatDisp.Location = Location; DatDisp.Size = Size; DatDisp.Show(); DatDisp.WriteData(TTAPIF.SavedDict, "Saved Data"); }
+        private void openSaveDirectoryToolStripMenuItem_Click(object sender, EventArgs e) { if (Properties.Settings.Default.SaveDirectory != "") Process.Start(Properties.Settings.Default.SaveDirectory); else BuildNotification("No save path selected :(", Properties.Resources.ChickenBlack, this); }
 
         private void changeDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog SFD = new FolderBrowserDialog();
             SFD.RootFolder = Environment.SpecialFolder.Desktop;
             DialogResult DR = SFD.ShowDialog();
-            if (DR == DialogResult.OK)
-            {
-                Properties.Settings.Default.SaveDirectory = SFD.SelectedPath;
-                BuildNotification("New save directory confirmed! - " + SFD.SelectedPath, Properties.Resources.ChickenBlack, this);
-            }
+            if (DR == DialogResult.OK) { Properties.Settings.Default.SaveDirectory = SFD.SelectedPath; BuildNotification("New save directory confirmed! - " + SFD.SelectedPath, Properties.Resources.ChickenBlack, this); }
         }
-
         void CheckDirectories()
         {
             if (Properties.Settings.Default.SaveDirectory == "") Properties.Settings.Default.SaveDirectory = @"C:\Users\" + Environment.UserName + @"\Documents\KDM\Logs";
@@ -235,50 +177,46 @@ namespace MarketRecorder
 
 
         public DriveManager DM;
-        public void DisplayShadowServicesMessage(bool x)        {                DriveProcessLabel.Visible = x;        }
+        public void DisplayShadowServicesMessage(bool x) { DriveProcessLabel.Visible = x; }
 
         public bool HasUploaded = false;
         private void CheckTimer_Tick(object sender, EventArgs e)
         {
             if (apiInstance != null)
             {
-                if (Properties.Settings.Default.DriveAutoUpload &&DateTime.Now > DateTime.ParseExact(Properties.Settings.Default.DriveUploadTime, "HH:mm:ss", CultureInfo.InvariantCulture) && !HasUploaded)
+                if (Properties.Settings.Default.DriveAutoUpload && DateTime.Now > DateTime.ParseExact(Properties.Settings.Default.DriveUploadTime, "HH:mm:ss", CultureInfo.InvariantCulture) && !HasUploaded)
                 {
-                    HasUploaded = true;
-                    if (DM == null) DriveConnectionLogic();
-                    DriveUploadLogic();
+                    HasUploaded = true; if (DM == null) DriveConnection(); DriveUploadAsync();
                 }
             }
+            DriveChangeProcessLbl();
         }
-
-        public void DriveConnectionLogic()
+        string SavePath = @"{0}\{1} " + DateTime.Today.ToString("yyyy-MM-dd") + ".csv";
+        public void DriveConnection()
         {
             if (DM == null)
             {
                 DM = new DriveManager();
-                if (DM.DriveConnection(this, SetForm))
-                {
-                    BuildNotification("Drive Connection started.", Properties.Resources.ConnectedNote, this);
-                    SetForm.DriveStatusChange(true);
-                }
-                else { BuildNotification("Drive Connection cannot be established.", Properties.Resources.ErrorNote, this); SetForm.DriveStatusChange(false); return; }
+                if (DM.Init(this)) { BuildNotification("Drive connection established.", Properties.Resources.ConnectedNote, this); SetForm.DriveStatusChange(true); }
+                else { BuildNotification("Drive connection could not be established.", Properties.Resources.ErrorNote, this); }
             }
-            else { BuildNotification("Drive Connection has already been started.", Properties.Resources.ErrorNote, this); SetForm.DriveStatusChange(false); }
+            else { BuildNotification("Drive connection already established.", Properties.Resources.ErrorNote, this); }
         }
-
-        public void DriveUploadLogic()
+        public async Task DriveUploadAsync()
         {
-            if (DM != null)
+            if (DM != null) { foreach (string[] item in TTAPIF.GetDriveUploadList()) { await Task.Run(() => DM.UploadFile(item[0], item[1])); } SetForm.ChangeLastUploadTime(DateTime.Now.ToString("HH:mm:ss:ffff")); }
+            else { BuildNotification("No drive connected established.", Properties.Resources.ErrorNote, this); }
+        }
+        List<string> DriveProcessList = new List<string>(); public void AddDriveStatus(string s) { DriveProcessList.Add(s); NoteCodes.Add(s); }
+        public void DriveChangeProcessLbl()
+        {
+            if (DriveProcessList.Count > 0)
             {
-                DisplayShadowServicesMessage(true);
-                BuildNotification(DM.RunFileSearchAsync() + " Files found.", Properties.Resources.ConnectedNote, this);
+                if (DriveProcessLabel.InvokeRequired) { DriveProcessLabel.Invoke(new Action(() => DriveProcessLabel.Text = DriveProcessList[0])); DriveProcessLabel.Invoke(new Action(() => DriveProcessLabel.Visible = true)); }
+                else { DriveProcessLabel.Text = DriveProcessList[0]; DriveProcessLabel.Visible = true; }
+                DriveProcessList.RemoveAt(0);
             }
-            else { BuildNotification("Drive Connection has not been started.", Properties.Resources.ErrorNote, this); }
-        }
-        public void DriveFilesDownloaded()
-        {
-            foreach (string[] item in TTAPIF.GetDriveUploadList()) BuildNotification(DM.UploadFiles(item[0], item[2]), Properties.Resources.UploadNote,this);
-            SetForm.ChangeLastUploadTime(DateTime.Now.ToString("HH:mm:ss"));            DisplayShadowServicesMessage(false); 
+            else { if (DriveProcessLabel.InvokeRequired) DriveProcessLabel.Invoke(new Action(() => DriveProcessLabel.Visible = true)); else DriveProcessLabel.Visible = false; }
         }
 
 

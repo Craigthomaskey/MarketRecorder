@@ -95,6 +95,7 @@
             this.MainLabel.TabIndex = 4;
             this.MainLabel.Text = "HE Feb19 x Apr19";
             this.MainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.MainLabel.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // LastTradeLbl
             // 
@@ -106,6 +107,7 @@
             this.LastTradeLbl.TabIndex = 5;
             this.LastTradeLbl.Text = "N/A";
             this.LastTradeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LastTradeLbl.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // TradeTypeLabl
             // 
@@ -117,6 +119,7 @@
             this.TradeTypeLabl.TabIndex = 5;
             this.TradeTypeLabl.Text = "N/A";
             this.TradeTypeLabl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TradeTypeLabl.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // AskVolumeLbl
             // 
@@ -128,6 +131,7 @@
             this.AskVolumeLbl.TabIndex = 5;
             this.AskVolumeLbl.Text = "N/A";
             this.AskVolumeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.AskVolumeLbl.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // BidVolumeLbl
             // 
@@ -139,6 +143,7 @@
             this.BidVolumeLbl.TabIndex = 5;
             this.BidVolumeLbl.Text = "N/A";
             this.BidVolumeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.BidVolumeLbl.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // LastPriceLbl
             // 
@@ -150,6 +155,7 @@
             this.LastPriceLbl.TabIndex = 6;
             this.LastPriceLbl.Text = "N/A";
             this.LastPriceLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LastPriceLbl.Click += new System.EventHandler(this.ContractControl_Click);
             // 
             // pictureBox1
             // 
@@ -217,6 +223,8 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ContractControl";
             this.Size = new System.Drawing.Size(450, 40);
+            this.Load += new System.EventHandler(this.ContractControl_Load);
+            this.Click += new System.EventHandler(this.ContractControl_Click);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
